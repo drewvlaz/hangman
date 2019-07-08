@@ -7,32 +7,32 @@ This class will represent a hangman puzzle
 public class Puzzle
 {
     // Declare instances
-    private String unformated_puzzle;
+    private String unformatedPuzzle;
     private String category;
     private String phrase;
-    private String phrase_blanks;
-    private String guessed_letters;
+    private String phraseBlanks;
+    private String guessedLetters;
 
     // Constructor
-    public Puzzle(String raw_format)
+    public Puzzle(String rawFormat)
     {
-        unformated_puzzle = raw_format;
-        guessed_letters = "";
+        unformatedPuzzle = rawFormat;
+        guessedLetters = "";
         formatCategory();
         formatPhrase();
         generatePhraseBlanks();
     }
 
     // Set the value of unformatted_puzzle
-    public void setUnformatedPuzzle(String raw_format)
+    public void setUnformatedPuzzle(String rawFormat)
     {
-        unformated_puzzle = raw_format;
+        unformatedPuzzle = rawFormat;
     }
 
     // Get the unformated puzzle
     public String getUnformatedPuzzle()
     {
-        return unformated_puzzle;
+        return unformatedPuzzle;
     }
 
     // Get the puzzle category
@@ -50,41 +50,41 @@ public class Puzzle
     // Get the phrase blanks
     public String getPhraseBlanks()
     {
-        return phrase_blanks;
+        return phraseBlanks;
     }
 
     // Get the guessed letters
     public String getGuessedLetters()
     {
-        return guessed_letters;
+        return guessedLetters;
     }
 
     // Format the puzzle category and return it
     public void formatCategory()
     {
-        category = unformated_puzzle.substring(0, unformated_puzzle.indexOf(":"));
+        category = unformatedPuzzle.substring(0, unformatedPuzzle.indexOf(":"));
     }
 
     // Format the puzzle phrase and return it
     public void formatPhrase()
     {
-        phrase = unformated_puzzle.substring(unformated_puzzle.indexOf(":") + 1);
+        phrase = unformatedPuzzle.substring(unformatedPuzzle.indexOf(":") + 1);
     }
 
     // Generate phrase with blanks to solve
     public void generatePhraseBlanks()
     {
-        phrase_blanks = "";
+        phraseBlanks = "";
 
         for(int i=0; i<phrase.length(); i++)
         {
             if(phrase.charAt(i) != ' ')
             {
-                phrase_blanks += "_";
+                phraseBlanks += "_";
             }
             else
             {
-                phrase_blanks += " / ";
+                phraseBlanks += " / ";
             }
         }
     }
@@ -92,13 +92,13 @@ public class Puzzle
     // Checks whether letter has been guessed already
     public boolean letterAlreadyGuessed(char guess)
     {
-        if(guessed_letters.indexOf(guess) != -1)
+        if(guessedLetters.indexOf(guess) != -1)
         {
             return true;
         }
         else
         {
-            guessed_letters += guess;
+            guessedLetters += guess;
             return false;
         }
     }
@@ -112,7 +112,7 @@ public class Puzzle
     // Fills the blanks of guessed letters in the puzzle phrase
     public void fillBlanks(char guess)
     {
-        int space_count = 0;
+        int spaceCount = 0;
 
         for(int i=0; i<phrase.length(); i++)
         {
@@ -120,29 +120,29 @@ public class Puzzle
             // in phrase_blanks instead of just a single space
             if(phrase.charAt(i) == ' ')
             {
-                space_count++;
+                spaceCount++;
             }
             else if(guess == phrase.charAt(i))
             {
-               phrase_blanks = (
-                   phrase_blanks.substring(0, i + space_count * 2)
+               phraseBlanks = (
+                   phraseBlanks.substring(0, i + spaceCount * 2)
                    + guess
-                   + phrase_blanks.substring(i + space_count * 2 + 1)
+                   + phraseBlanks.substring(i + spaceCount * 2 + 1)
                );
             }
         }
     }
 
     // Checks whether a phrase is a solution to the puzzle
-    public boolean isSolution(String player_phrase)
+    public boolean isSolution(String playerPhrase)
     {
-        return player_phrase.equals(phrase);
+        return playerPhrase.equals(phrase);
     }
 
     // Print puzzle phrase with guessed letters filled in
     public String toString()
     {
-        return phrase_blanks;
+        return phraseBlanks;
     }
     
 }

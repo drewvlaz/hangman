@@ -19,37 +19,37 @@ public class Hangman
         Scanner fr = new Scanner(file_name);
         Scanner sc = new Scanner(System.in);
         Random rd = new Random();
-        ArrayList<String> puzzle_list = new ArrayList<String>();
-        String player_phrase;
+        ArrayList<String> puzzleList = new ArrayList<String>();
+        String playerPhrase;
+        String playAgain;
         char guess;
-        int guesses_left;
+        int guessesLeft;
         int wins = 0, losses = 0;
         
-
         // Read in list of puzzles
         while(fr.hasNextLine())
         {
-            puzzle_list.add(fr.nextLine());
+            puzzleList.add(fr.nextLine());
         }
 
         // Select a random puzzle
-        int puzzle_selection = 0; //rd.nextInt(puzzle_list.size());
-        Puzzle puzzle = new Puzzle(puzzle_list.get(puzzle_selection));
+        int puzzleSelection = rd.nextInt(puzzleList.size());
+        Puzzle puzzle = new Puzzle(puzzleList.get(puzzleSelection));
         // Remove selected puzzle in order to not repeat later
-        puzzle_list.remove(puzzle_selection);
+        puzzleList.remove(puzzleSelection);
 
         // Initialize guesses for this puzzle
-        guesses_left = 7;
+        guessesLeft = 7;
 
         // Display category and puzzle phrase blanks
         System.out.println("Category: " + puzzle.getCategory());
-        System.out.println(puzzle);
+        System.out.println("\n" + puzzle);
 
         // Player guesses until no guesses left
-        while(guesses_left > 0)
+        while(guessesLeft > 0)
         {
             // Display guesses left
-            System.out.println("\nYou have " + guesses_left + " guesses to solve the puzzle.");
+            System.out.println("\nYou have " + guessesLeft + " guesses to solve the puzzle.");
     
             // Get user selection
             System.out.print("Guess a letter: ");
@@ -59,6 +59,7 @@ public class Hangman
             if(puzzle.letterAlreadyGuessed(guess))
             {
                 System.out.println("You already picked that letter.");
+                System.out.println("\n" + puzzle);
                 continue;
             }
             else if(puzzle.hasLetter(guess))
@@ -72,7 +73,7 @@ public class Hangman
 
             // Display puzzle with updated blanks as player guesses
             System.out.println("\n" + puzzle);
-            guesses_left--;
+            guessesLeft--;
         }
 
         // Spacing
@@ -80,10 +81,10 @@ public class Hangman
 
         // Get final solution to puzzle phrase
         System.out.print("Enter the correct phrase: ");
-        player_phrase = sc.nextLine().toUpperCase();
+        playerPhrase = sc.nextLine().toUpperCase();
 
         // Check for accuracy
-        if(puzzle.isSolution(player_phrase))
+        if(puzzle.isSolution(playerPhrase))
         {
             wins++;
             System.out.println(
