@@ -30,7 +30,7 @@ public class Hangman
         }
 
         // Select a random puzzle
-        int puzzle_selection = rd.nextInt(puzzle_list.size());
+        int puzzle_selection = 0; //rd.nextInt(puzzle_list.size());
         Puzzle puzzle = new Puzzle(puzzle_list.get(puzzle_selection));
         // Remove selected puzzle in order to not repeat later
         puzzle_list.remove(puzzle_selection);
@@ -38,6 +38,14 @@ public class Hangman
         System.out.println(puzzle.getCategory());
         System.out.println(puzzle.getPhrase());
         System.out.println(puzzle);
+        puzzle.fillBlanks('S');
+        puzzle.fillBlanks('T');
+        puzzle.fillBlanks('H');
+        puzzle.fillBlanks('N');
+        puzzle.fillBlanks('R');
+        puzzle.fillBlanks('K');
+        System.out.println(puzzle);
+
 
     }
 }

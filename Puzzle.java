@@ -11,26 +11,57 @@ public class Puzzle
     private String category;
     private String phrase;
     private String phrase_blanks;
+    private String guessed_letters;
 
     // Constructor
     public Puzzle(String raw_format)
     {
         unformated_puzzle = raw_format;
-        category = formatCategory();
-        phrase = formatPhrase();
+        formatCategory();
+        formatPhrase();
         generatePhraseBlanks();
     }
 
-    // Format the puzzle category and return it
-    public String formatCategory()
+    // Set the value of unformatted_puzzle
+    public void setUnformatedPuzzle(String raw_format)
     {
-        return unformated_puzzle.substring(0, unformated_puzzle.indexOf(":"));
+        unformated_puzzle = raw_format;
+    }
+
+    // Get the unformated puzzle
+    public String getUnformatedPuzzle()
+    {
+        return unformated_puzzle;
+    }
+
+    // Get the puzzle category
+    public String getCategory()
+    {
+        return category;
+    }
+
+    // Get the puzzle phrase
+    public String getPhrase()
+    {
+        return phrase;
+    }
+
+    // Get the phrase blanks
+    public String getPhraseBlanks()
+    {
+        return phrase_blanks;
+    }
+
+    // Format the puzzle category and return it
+    public void formatCategory()
+    {
+        category = unformated_puzzle.substring(0, unformated_puzzle.indexOf(":"));
     }
 
     // Format the puzzle phrase and return it
-    public String formatPhrase()
+    public void formatPhrase()
     {
-        return unformated_puzzle.substring(unformated_puzzle.indexOf(":") + 1);
+        phrase = unformated_puzzle.substring(unformated_puzzle.indexOf(":") + 1);
     }
 
     // Generate phrase with blanks to solve
@@ -51,24 +82,35 @@ public class Puzzle
         }
     }
 
-    // Get the puzzle category
-    public String getCategory()
-    {
-        return category;
-    }
-
-    // Get the puzzle phrase
-    public String getPhrase()
-    {
-        return phrase;
-    }
-
     // Returns boolean of whether a letter is in puzzle phrase
     public boolean hasLetter(char guess)
     {
-        return true;
+        return phrase.indexOf(guess) != -1;
     }
 
+    // Fills the blanks of guessed letters in the puzzle phrase
+    public void fillBlanks(char guess)
+    {
+        int space_count = 0;
+
+        for(int i=0; i<phrase.length(); i++)
+        {
+            // Keep track of spaces because they consist of " / " 
+            // in phrase_blanks instead of just a single space
+            if(phrase.charAt(i) == ' ')
+            {
+                space_count++;
+            }
+            else if(guess == phrase.charAt(i))
+            {
+               phrase_blanks = (
+                   phrase_blanks.substring(0, i + space_count * 2)
+                   + guess
+                   + phrase_blanks.substring(i + space_count * 2 + 1)
+               );
+            }
+        }
+    }
 
     // Print solve status of puzzle phrase 
     public String toString()
