@@ -59,13 +59,13 @@ public class Puzzle
         return guessedLetters;
     }
 
-    // Format the puzzle category and return it
+    // Format the puzzle category
     public void formatCategory()
     {
         category = unformatedPuzzle.substring(0, unformatedPuzzle.indexOf(":"));
     }
 
-    // Format the puzzle phrase and return it
+    // Format the puzzle phrase
     public void formatPhrase()
     {
         phrase = unformatedPuzzle.substring(unformatedPuzzle.indexOf(":") + 1);
