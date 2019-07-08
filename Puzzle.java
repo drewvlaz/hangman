@@ -23,7 +23,7 @@ public class Puzzle
         generatePhraseBlanks();
     }
 
-    // Set the value of unformatted_puzzle
+    // Set the value of unformattedPuzzle
     public void setUnformatedPuzzle(String rawFormat)
     {
         unformatedPuzzle = rawFormat;
@@ -117,7 +117,7 @@ public class Puzzle
         for(int i=0; i<phrase.length(); i++)
         {
             // Keep track of spaces because they consist of " / " 
-            // in phrase_blanks instead of just a single space
+            // in phraseBlanks instead of just a single space
             if(phrase.charAt(i) == ' ')
             {
                 spaceCount++;

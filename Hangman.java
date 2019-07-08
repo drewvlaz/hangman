@@ -15,16 +15,16 @@ public class Hangman
     public static void main(String[] args) throws IOException
     {
         // Declare variables
-        File file_name = new File("puzzles.txt");
-        Scanner fr = new Scanner(file_name);
-        Scanner sc = new Scanner(System.in);
-        Random rd = new Random();
-        ArrayList<String> puzzleList = new ArrayList<String>();
-        String playerPhrase;
-        String playAgain;
-        char guess;
-        int guessesLeft;
-        int wins = 0, losses = 0;
+        File file_name = new File("puzzles.txt");                   // File that contains puzzle categories and phrases
+        Scanner fr = new Scanner(file_name);                        // Reads in puzzles from file
+        Scanner sc = new Scanner(System.in);                        // Reads in user input
+        Random rd = new Random();                                   // Used to select a random puzzle
+        ArrayList<String> puzzleList = new ArrayList<String>();     // Stores list of unformatted puzzles
+        String playAgain = "";                                      // Yes or no to play another game
+        String playerPhrase;                                        // Final guess for puzzle phrase when player runs out of guesses
+        char guess;                                                 // Letter guess from player
+        int guessesLeft;                                            // Number of guesses left - default is 7
+        int wins = 0, losses = 0;                                   // For a win/loss ratio
         
         // Read in list of puzzles
         while(fr.hasNextLine())
@@ -32,78 +32,110 @@ public class Hangman
             puzzleList.add(fr.nextLine());
         }
 
-        // Select a random puzzle
-        int puzzleSelection = rd.nextInt(puzzleList.size());
-        Puzzle puzzle = new Puzzle(puzzleList.get(puzzleSelection));
-        // Remove selected puzzle in order to not repeat later
-        puzzleList.remove(puzzleSelection);
-
-        // Initialize guesses for this puzzle
-        guessesLeft = 7;
-
-        // Display category and puzzle phrase blanks
-        System.out.println("Category: " + puzzle.getCategory());
-        System.out.println("\n" + puzzle);
-
-        // Player guesses until no guesses left
-        while(guessesLeft > 0)
+        do
         {
-            // Display guesses left
-            System.out.println("\nYou have " + guessesLeft + " guesses to solve the puzzle.");
-    
-            // Get user selection
-            System.out.print("Guess a letter: ");
-            guess = sc.nextLine().toUpperCase().charAt(0);
+            // Select a random puzzle
+            int puzzleSelection = rd.nextInt(puzzleList.size());
+            Puzzle puzzle = new Puzzle(puzzleList.get(puzzleSelection));
+            // Remove selected puzzle in order to not repeat later
+            puzzleList.remove(puzzleSelection);
 
-            // Check puzzle for guess
-            if(puzzle.letterAlreadyGuessed(guess))
+            // Initialize guesses for this puzzle
+            guessesLeft = 7;
+
+            // Display category and puzzle phrase blanks
+            System.out.println("Category: " + puzzle.getCategory());
+            System.out.println("\n" + puzzle);
+
+            // Player guesses until no guesses left
+            while(guessesLeft > 0)
             {
-                System.out.println("You already picked that letter.");
+                // Display guesses left
+                System.out.println("\nYou have " + guessesLeft + " guesses to solve the puzzle.");
+        
+                // Get user selection
+                System.out.print("Guess a letter: ");
+                guess = validate(sc.nextLine().toUpperCase().charAt(0));
+
+                // Check puzzle for guess
+                if(puzzle.letterAlreadyGuessed(guess))
+                {
+                    System.out.println("You already picked that letter.");
+                    System.out.println("\n" + puzzle);
+                    continue;
+                }
+                else if(puzzle.hasLetter(guess))
+                {
+                    puzzle.fillBlanks(guess);
+                }
+                else
+                {
+                    System.out.println("Sorry there are no \"" + guess + "\'s\".");
+                }
+
+                // Display updated puzzle with guesses
                 System.out.println("\n" + puzzle);
-                continue;
+                guessesLeft--;
             }
-            else if(puzzle.hasLetter(guess))
+
+            // Get final solution to puzzle phrase
+            System.out.print("\nEnter the correct phrase: ");
+            playerPhrase = sc.nextLine().toUpperCase();
+
+            // Check for accuracy
+            if(puzzle.isSolution(playerPhrase))
             {
-                puzzle.fillBlanks(guess);
+                wins++;
+                System.out.println("\nThat is correct!");
             }
             else
             {
-                System.out.println("Sorry there are no \"" + guess + "\'s\".");
+                losses++;
+                System.out.println("\nSorry, the correct answer was " + puzzle.getPhrase());
             }
 
-            // Display puzzle with updated blanks as player guesses
-            System.out.println("\n" + puzzle);
-            guessesLeft--;
+            // Update win/loss
+            System.out.println("You have " + wins + " wins and " + losses + " losses.\n");
+
+            // Confirm there are more puzzles
+            if(puzzleList.size() > 0)
+            {
+                // Ask if player would like to play again
+                System.out.print("Would you like to play again? ");
+                playAgain = validate(sc.nextLine().toLowerCase());
+                System.out.println("\n");
+            }
         }
+        while(playAgain.equals("yes") && puzzleList.size() > 0);
+    }
 
-        // Spacing
-        System.out.println("\n");
+    /* Accepts a string
+    Validates to make sure it is yes or no */
+    public static String validate(String response)
+    {
+        Scanner sc = new Scanner(System.in);
 
-        // Get final solution to puzzle phrase
-        System.out.print("Enter the correct phrase: ");
-        playerPhrase = sc.nextLine().toUpperCase();
-
-        // Check for accuracy
-        if(puzzle.isSolution(playerPhrase))
+        while(!response.equals("yes") && !response.equals("no"))
         {
-            wins++;
-            System.out.println(
-                "That is correct! You have " 
-                + wins + " wins and " 
-                + losses + " losses."
-            );
+            System.out.print("\n\tPlease respond \"yes\" or \"no\": ");
+            response = sc.nextLine().toLowerCase();
         }
-        else
+
+        return response;
+    }
+
+    /* Accepts a char
+    Validates to make sure it is a letter */
+    public static char validate(char guess)
+    {
+        Scanner sc = new Scanner(System.in);
+
+        while(!Character.isAlphabetic(guess))
         {
-            losses++;
-            System.out.println(
-                "Sorry, the correct answer was " + puzzle.getPhrase()
-                + "\nYou have " + wins + " wins and "
-                + losses + " losses."
-            );
+            System.out.print("\n\tPlease enter a letter: ");
+            guess = sc.nextLine().toUpperCase().charAt(0);
         }
 
-
-
+        return guess;
     }
 }
