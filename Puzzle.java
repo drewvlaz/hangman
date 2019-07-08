@@ -17,6 +17,7 @@ public class Puzzle
     public Puzzle(String raw_format)
     {
         unformated_puzzle = raw_format;
+        guessed_letters = "";
         formatCategory();
         formatPhrase();
         generatePhraseBlanks();
@@ -52,6 +53,12 @@ public class Puzzle
         return phrase_blanks;
     }
 
+    // Get the guessed letters
+    public String getGuessedLetters()
+    {
+        return guessed_letters;
+    }
+
     // Format the puzzle category and return it
     public void formatCategory()
     {
@@ -82,7 +89,21 @@ public class Puzzle
         }
     }
 
-    // Returns boolean of whether a letter is in puzzle phrase
+    // Checks whether letter has been guessed already
+    public boolean letterAlreadyGuessed(char guess)
+    {
+        if(guessed_letters.indexOf(guess) != -1)
+        {
+            return true;
+        }
+        else
+        {
+            guessed_letters += guess;
+            return false;
+        }
+    }
+
+    // Checks whether letter is in puzzle phrase
     public boolean hasLetter(char guess)
     {
         return phrase.indexOf(guess) != -1;
@@ -112,7 +133,13 @@ public class Puzzle
         }
     }
 
-    // Print solve status of puzzle phrase 
+    // Checks whether a phrase is a solution to the puzzle
+    public boolean isSolution(String player_phrase)
+    {
+        return player_phrase.equals(phrase);
+    }
+
+    // Print puzzle phrase with guessed letters filled in
     public String toString()
     {
         return phrase_blanks;
