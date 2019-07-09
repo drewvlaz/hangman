@@ -94,9 +94,6 @@ public class Hangman
                 System.out.println("\nSorry, the correct answer was " + puzzle.getPhrase());
             }
 
-            // Update win/loss
-            System.out.println("You have " + wins + " wins and " + losses + " losses.\n");
-
             // Confirm there are more puzzles
             if(puzzleList.size() > 0)
             {
@@ -107,6 +104,9 @@ public class Hangman
             }
         }
         while(playAgain.equals("yes") && puzzleList.size() > 0);
+
+        // Display win/loss
+        System.out.println("You have " + wins + " wins and " + losses + " losses.\n");
     }
 
     /* Accepts a string
