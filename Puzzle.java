@@ -7,17 +7,19 @@ This class will represent a hangman puzzle
 public class Puzzle
 {
     // Declare instances
-    private String unformatedPuzzle;
-    private String category;
-    private String phrase;
-    private String phraseBlanks;
-    private String guessedLetters;
+    private String unformatedPuzzle;        // String read in from file
+    private String category;                // Puzzle category
+    private String phrase;                  // Puzzle user tries to solve
+    private String phraseBlanks;            // String of puzzle skeleton
+    private String guessedLetters;          // Keeps track of letters guessed
+    private boolean puzzleSolved;           // State of puzzle being solved
 
     // Constructor
     public Puzzle(String rawFormat)
     {
         unformatedPuzzle = rawFormat;
         guessedLetters = "";
+        puzzleSolved = false;
         formatCategory();
         formatPhrase();
         generatePhraseBlanks();
@@ -27,6 +29,11 @@ public class Puzzle
     public void setUnformatedPuzzle(String rawFormat)
     {
         unformatedPuzzle = rawFormat;
+        guessedLetters = "";
+        puzzleSolved = false;
+        formatCategory();
+        formatPhrase();
+        generatePhraseBlanks();
     }
 
     // Get the unformated puzzle
@@ -57,6 +64,12 @@ public class Puzzle
     public String getGuessedLetters()
     {
         return guessedLetters;
+    }
+
+    // Get whether puzzle was solved
+    public boolean getPuzzleSolved()
+    {
+        return puzzleSolved;
     }
 
     // Format the puzzle category
@@ -137,6 +150,21 @@ public class Puzzle
     public boolean isSolution(String playerPhrase)
     {
         return playerPhrase.equals(phrase);
+    }
+
+    // Checks whether the puzzle is solved yet
+    public boolean isSolved()
+    {
+        // If all blanks have been guess
+        if(phraseBlanks.indexOf("_") == -1)
+        {
+            puzzleSolved = true;
+            return true; 
+        }
+        else
+        {
+            return false;
+        }
     }
 
     // Print puzzle phrase with guessed letters filled in

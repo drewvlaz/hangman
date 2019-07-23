@@ -21,7 +21,6 @@ public class Hangman
         Random rd = new Random();                                   // Used to select a random puzzle
         ArrayList<String> puzzleList = new ArrayList<String>();     // Stores list of unformatted puzzles
         String playAgain = "";                                      // Yes or no to play another game
-        String playerPhrase;                                        // Final guess for puzzle phrase when player runs out of guesses
         char guess;                                                 // Letter guess from player
         int guessesLeft;                                            // Number of guesses left - default is 7
         int wins = 0, losses = 0;                                   // For a win/loss ratio
@@ -48,14 +47,14 @@ public class Hangman
             System.out.println("\n" + puzzle);
 
             // Player guesses until no guesses left
-            while(guessesLeft > 0)
+            while(guessesLeft > 0 && !puzzle.isSolved())
             {
                 // Display guesses left
                 System.out.println("\nYou have " + guessesLeft + " guesses to solve the puzzle.");
         
                 // Get user selection
                 System.out.print("Guess a letter: ");
-                guess = validate(sc.nextLine().toUpperCase().charAt(0));
+                guess = validateGuess(sc.nextLine().toUpperCase());
 
                 // Check puzzle for guess
                 if(puzzle.letterAlreadyGuessed(guess))
@@ -71,19 +70,15 @@ public class Hangman
                 else
                 {
                     System.out.println("Sorry there are no \"" + guess + "\'s\".");
+                    guessesLeft--;
                 }
 
                 // Display updated puzzle with guesses
                 System.out.println("\n" + puzzle);
-                guessesLeft--;
             }
 
-            // Get final solution to puzzle phrase
-            System.out.print("\nEnter the correct phrase: ");
-            playerPhrase = sc.nextLine().toUpperCase();
-
-            // Check for accuracy
-            if(puzzle.isSolution(playerPhrase))
+            // Check to see if puzzle was solved
+            if(puzzle.isSolved())
             {
                 wins++;
                 System.out.println("\nThat is correct!");
@@ -126,16 +121,16 @@ public class Hangman
 
     /* Accepts a char
     Validates to make sure it is a letter */
-    public static char validate(char guess)
+    public static char validateGuess(String guess)
     {
         Scanner sc = new Scanner(System.in);
 
-        while(!Character.isAlphabetic(guess))
+        while(guess.length() > 1 || !Character.isAlphabetic(guess.charAt(0)))
         {
             System.out.print("\n\tPlease enter a letter: ");
-            guess = sc.nextLine().toUpperCase().charAt(0);
+            guess = sc.nextLine().toUpperCase();
         }
 
-        return guess;
+        return guess.charAt(0);
     }
 }
